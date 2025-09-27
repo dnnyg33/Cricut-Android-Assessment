@@ -63,7 +63,7 @@ class AssessmentViewModel
 
     fun next() = viewModelScope.launch {
         _uiState.update { state ->
-            if (state.currentIndex < state.questions.lastIndex)
+            if (state.currentIndex <= state.questions.lastIndex)
                 state.copy(currentIndex = state.currentIndex + 1)
             else state
         }
