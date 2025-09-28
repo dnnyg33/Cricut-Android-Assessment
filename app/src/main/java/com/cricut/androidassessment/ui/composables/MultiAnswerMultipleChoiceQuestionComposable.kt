@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.cricut.androidassessment.model.MultipleAnswerMultipleChoiceQuestion
 
@@ -54,7 +56,7 @@ fun MultiAnswerMultipleChoiceQuestionComposable(
                     }
                 )
                 Spacer(Modifier.width(12.dp))
-                Text(text = string)
+                Text(text = string,  modifier = Modifier.align(Alignment.CenterVertically))
             }
         }
     }

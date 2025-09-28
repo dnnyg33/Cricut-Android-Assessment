@@ -10,6 +10,11 @@ data class SingleChoiceAnswer(
     val selectedIndex: Int
 ) : UserAnswer
 
+data class MultipleChoiceAnswer(
+    override val questionId: String,
+    val selectedIndices: Set<Int>
+) : UserAnswer
+
 data class TextAnswer(
     override val questionId: String,
     val text: String

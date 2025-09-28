@@ -27,11 +27,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cricut.androidassessment.model.MultipleAnswerMultipleChoiceQuestion
+import com.cricut.androidassessment.model.MultipleChoiceAnswer
 import com.cricut.androidassessment.model.OpenEndedQuestion
 import com.cricut.androidassessment.model.SingleAnswerMultipleChoiceQuestion
 import com.cricut.androidassessment.model.SingleChoiceAnswer
 import com.cricut.androidassessment.model.TextAnswer
 import com.cricut.androidassessment.ui.AssessmentViewModel
+import com.cricut.androidassessment.ui.composables.FunLoading
+import com.cricut.androidassessment.ui.composables.MultiAnswerMultipleChoiceQuestionComposable
 import com.cricut.androidassessment.ui.composables.OpenEndedQuestionComposable
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,6 +44,7 @@ fun AssessmentScreen(
     viewModel: AssessmentViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    viewModel.load()
 
     Scaffold(
         topBar = {
@@ -93,6 +97,11 @@ fun AssessmentScreen(
             )
         }) { padding ->
         Surface(modifier = Modifier.padding(padding)) {
+            if (uiState.isLoading) {
+                // Loading state
+                FunLoading()
+                return@Surface
+            }
             val q = uiState.currentQuestion
             if (q == null) {
                 // End uiState: simple summary (optional)
@@ -126,7 +135,16 @@ fun AssessmentScreen(
                     )
                 }
 
-                is MultipleAnswerMultipleChoiceQuestion -> TODO()
+                is MultipleAnswerMultipleChoiceQuestion -> {
+                    val selected = (uiState.answers[q.id] as? MultipleChoiceAnswer)?.selectedIndices
+                        ?: emptySet()
+                    MultiAnswerMultipleChoiceQuestionComposable(
+                        question = q,
+                        selectedIndices = selected,
+                        onSelect = { viewModel.selectOption(q.id, it) },
+                        onDeselect = { viewModel.deselectOption(q.id, it) },
+                    )
+                }
             }
         }
     }
