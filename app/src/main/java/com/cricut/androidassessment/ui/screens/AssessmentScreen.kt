@@ -40,7 +40,6 @@ import com.cricut.androidassessment.ui.composables.OpenEndedQuestionComposable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AssessmentScreen(
-    modifier: Modifier = Modifier,
     viewModel: AssessmentViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -61,18 +60,7 @@ fun AssessmentScreen(
                     ) { Text("Back") }
                 },
                 floatingActionButton = {
-                    val canGoNext = when (val q = uiState.currentQuestion) {
-                        is MultipleAnswerMultipleChoiceQuestion ->
-                            (uiState.answers[q.id] as? SingleChoiceAnswer) != null
-
-                        is OpenEndedQuestion ->
-                            ((uiState.answers[q.id] as? TextAnswer)?.text?.isNotBlank() == true)
-
-                        is SingleAnswerMultipleChoiceQuestion ->
-                            (uiState.answers[q.id] as? SingleChoiceAnswer) != null
-
-                        else -> false
-                    }
+                    val canGoNext = uiState.currentQuestion?.userAnswer?.canGoNext() == true
                     AnimatedVisibility(visible = canGoNext) {
                         ExtendedFloatingActionButton(
                             onClick = viewModel::next,
@@ -116,7 +104,8 @@ fun AssessmentScreen(
 
             when (q) {
                 is SingleAnswerMultipleChoiceQuestion -> {
-                    val selected = (uiState.answers[q.id] as? SingleChoiceAnswer)?.selectedIndex
+                    val selected =
+                        (uiState.currentQuestion?.userAnswer as? SingleChoiceAnswer)?.selectedIndex
                     SingleAnswerMultipleChoiceQuestionComposable(
                         question = q,
                         selectedIndex = selected,
@@ -126,7 +115,7 @@ fun AssessmentScreen(
                 }
 
                 is OpenEndedQuestion -> {
-                    val text = (uiState.answers[q.id] as? TextAnswer)?.text.orEmpty()
+                    val text = (uiState.currentQuestion?.userAnswer as? TextAnswer)?.text.orEmpty()
                     OpenEndedQuestionComposable(
                         question = q,
                         text = text,
@@ -136,7 +125,8 @@ fun AssessmentScreen(
                 }
 
                 is MultipleAnswerMultipleChoiceQuestion -> {
-                    val selected = (uiState.answers[q.id] as? MultipleChoiceAnswer)?.selectedIndices
+                    val selected =
+                        (uiState.currentQuestion?.userAnswer as? MultipleChoiceAnswer)?.selectedIndices
                         ?: emptySet()
                     MultiAnswerMultipleChoiceQuestionComposable(
                         question = q,
