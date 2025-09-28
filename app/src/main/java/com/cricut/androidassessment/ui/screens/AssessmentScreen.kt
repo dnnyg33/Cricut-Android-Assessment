@@ -3,7 +3,7 @@ package com.cricut.androidassessment.ui.screens
 import SingleAnswerMultipleChoiceQuestionComposable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -93,10 +93,20 @@ fun AssessmentScreen(
             val q = uiState.currentQuestion
             if (q == null) {
                 // End uiState: simple summary (optional)
-                Box(modifier = Modifier.fillMaxSize()) {
+
+                Column {
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            "Quiz complete. Thanks!",
+                            modifier = Modifier.padding(24.dp)
+                        )
+                    }
                     Text(
-                        "Quiz complete. Thanks!",
-                        modifier = Modifier.padding(24.dp)
+                        "You answered ${uiState.correctAnswersCount} questions correctly. Open-ended questions are not scored. You can go back to review or change your answers.",
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Center
                     )
                 }
                 return@Surface

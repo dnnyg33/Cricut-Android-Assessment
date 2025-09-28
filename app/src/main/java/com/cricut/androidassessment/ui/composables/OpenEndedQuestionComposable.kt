@@ -2,6 +2,7 @@ package com.cricut.androidassessment.ui.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedTextField
@@ -25,7 +26,7 @@ fun OpenEndedQuestionComposable(
             value = text,
             onValueChange = onTextChange,
             placeholder = { Text(question.placeholder) },
-            modifier = Modifier
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

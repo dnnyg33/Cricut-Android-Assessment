@@ -17,6 +17,23 @@ data class AssessmentUiState(
     val currentIndex: Int = 0,
     val isLoading: Boolean = false,
 ) {
+    val correctAnswersCount: String get() {
+        val correctCount = questions.count { question ->
+            when (question) {
+                is com.cricut.androidassessment.model.SingleAnswerMultipleChoiceQuestion -> {
+                    question.userAnswer?.selectedIndex == question.correctIndex
+                }
+                is com.cricut.androidassessment.model.MultipleAnswerMultipleChoiceQuestion -> {
+                    question.userAnswer?.selectedIndices == question.correctIndices
+                }
+                is com.cricut.androidassessment.model.OpenEndedQuestion -> {
+                    // Open-ended questions are not scored
+                    false
+                }
+            }
+        }
+        return "$correctCount out of ${questions.filter { it.isScorable }.size}"
+    }
     val currentQuestion: Question? get() = questions.getOrNull(currentIndex)
     val isFirst: Boolean get() = currentIndex == 0
     val isLast: Boolean get() = currentIndex == questions.lastIndex
