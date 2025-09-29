@@ -64,6 +64,13 @@ class AssessmentViewModel
                 // Handle error, e.g., log or show a message
             }
     }
+
+    fun restartQuiz() = viewModelScope.launch {
+        _uiState.update {
+            it.copy(currentIndex = 0, questions = emptyList())
+        }
+        load()
+    }
     val uiState: StateFlow<AssessmentUiState> = _uiState
 
     fun selectOption(questionId: String, index: Int) = viewModelScope.launch {
