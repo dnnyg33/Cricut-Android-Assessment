@@ -82,8 +82,6 @@ class AssessmentViewModel
                 questions = state.questions.toMutableList().apply {
                     if (questionIndex != -1 && updatedAnswer != null) {
                         this[questionIndex] = this[questionIndex].updateAnswer(updatedAnswer)
-                    // } else {
-                    //     this[questionIndex].updateAnswer()
                     }
                 }
             )
