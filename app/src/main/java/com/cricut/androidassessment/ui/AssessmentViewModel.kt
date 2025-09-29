@@ -3,9 +3,12 @@ package com.cricut.androidassessment.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cricut.androidassessment.QuestionsRepository
+import com.cricut.androidassessment.ai.AnswerEvaluator
+import com.cricut.androidassessment.ai.Verdict
 import com.cricut.androidassessment.model.Question
 import com.cricut.androidassessment.model.TextAnswer
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -27,8 +30,7 @@ data class AssessmentUiState(
                     question.userAnswer?.selectedIndices == question.correctIndices
                 }
                 is com.cricut.androidassessment.model.OpenEndedQuestion -> {
-                    // Open-ended questions are not scored
-                    false
+                    question.userAnswer?.result?.verdict == Verdict.CORRECT
                 }
             }
         }
@@ -40,12 +42,16 @@ data class AssessmentUiState(
 }
 @HiltViewModel
 class AssessmentViewModel
-@Inject constructor(private val questionsRepository: QuestionsRepository) : ViewModel() {
+@Inject constructor(
+    private val questionsRepository: QuestionsRepository,
+    private val evaluator: AnswerEvaluator,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         AssessmentUiState(
             )
     )
+    val uiState: StateFlow<AssessmentUiState> = _uiState
 
     fun load() = viewModelScope.launch {
         _uiState.update {
@@ -71,7 +77,6 @@ class AssessmentViewModel
         }
         load()
     }
-    val uiState: StateFlow<AssessmentUiState> = _uiState
 
     fun selectOption(questionId: String, index: Int) = viewModelScope.launch {
         _uiState.update { state ->
@@ -102,15 +107,33 @@ class AssessmentViewModel
         }
     }
 
-    fun updateText(questionId: String, text: String) = viewModelScope.launch {
-        _uiState.update { state ->
-            val updatedAnswer = TextAnswer(questionId, text)
-            val questionIndex = state.questions.indexOfFirst { it.id == questionId }
-            state.copy(questions = state.questions.toMutableList().apply {
-                if (questionIndex != -1) {
-                    this[questionIndex] = this[questionIndex].updateAnswer(updatedAnswer)
-                }
-            })
+    fun updateText(questionId: String, text: String): Job {
+        val result = evaluator.evaluate(
+            question = "Explain photosynthesis.",
+            studentAnswerRaw = text,
+            referenceAnswers = listOf(
+                "A Composable function is a function in Jetpack Compose annotated with @Composable that defines a piece of UI.",
+
+                "A Composable function is a special Kotlin function marked with @Composable that describes how to build part of the UI in a declarative way.",
+
+                "In Android’s Jetpack Compose, a Composable function is a function annotated with @Composable that generates UI elements instead of returning data.",
+
+                "A Composable function is a declarative UI building block in Jetpack Compose, created by marking a Kotlin function with @Composable.",
+
+                "A Composable function is a Kotlin function annotated with @Composable that produces UI rather than values.",
+            ),
+            requiredKeywords = setOf("composable", "function", "ui")
+        )
+        return viewModelScope.launch {
+            _uiState.update { state ->
+                val updatedAnswer = TextAnswer(questionId, text, result)
+                val questionIndex = state.questions.indexOfFirst { it.id == questionId }
+                state.copy(questions = state.questions.toMutableList().apply {
+                    if (questionIndex != -1) {
+                        this[questionIndex] = this[questionIndex].updateAnswer(updatedAnswer)
+                    }
+                })
+            }
         }
     }
 

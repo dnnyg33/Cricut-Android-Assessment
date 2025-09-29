@@ -38,6 +38,12 @@ android {
     }
     buildFeatures {
         compose = true
+        mlModelBinding = true
+    }
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
     }
 }
 
@@ -67,10 +73,16 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.foundation)
     implementation(libs.compose.runtime)
-    implementation(libs.airbnb.lottie)
+
+    //ai
+    implementation(libs.tensorflow.lite)
+    implementation(libs.tensorflow.lite.support)
+    implementation(libs.tasks.core)
+    implementation(libs.tasks.text)
 
     // Hilt
     implementation(libs.hilt.android)
+    implementation(libs.genai.common)
     ksp(libs.hilt.compiler)
 
     // Detekt

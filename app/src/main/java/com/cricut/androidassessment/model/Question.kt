@@ -60,15 +60,15 @@ data class OpenEndedQuestion(
     override val prompt: String,
     override val userAnswer: TextAnswer? = null,
     val placeholder: String = "Your answer here",
-    override val isScorable: Boolean = false,
+    override val isScorable: Boolean = true,
 ) : Question {
     override fun selectOption(index: Int): UserAnswer {
         // No-op for text answer; selection by index not applicable
-        return this.userAnswer ?: TextAnswer(id, "")
+        return this.userAnswer ?: TextAnswer(id, "", 0.0f)
     }
 
     override fun deselectOption(index: Int): UserAnswer {
         // No-op for text answer; deselection by index not applicable
-        return this.userAnswer ?: TextAnswer(id, "")
+        return this.userAnswer ?: TextAnswer(id, "", 0.0f)
     }
 }

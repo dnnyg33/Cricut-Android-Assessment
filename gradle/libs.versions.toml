@@ -17,9 +17,14 @@ ksp = "2.2.10-2.0.2"
 mockitoAndroid = "5.19.0"
 mockitoCore = "5.19.0"
 mockitoKotlin = "6.0.0"
+tasksCore = "0.10.29"
+tasksText = "0.10.29"
+tensorflowLite = "2.17.0"
+tensorflowLiteSupport = "0.5.0"
+tensorflowLiteTaskText = "0.4.4"
+genaiCommon = "1.0.0-beta1"
 
 [libraries]
-airbnb-lottie = { group = "com.airbnb.android", name = "lottie-compose", version = "6.6.9" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
@@ -54,6 +59,12 @@ androidx-core-testing = { module = "androidx.arch.core:core-testing", version.re
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+tasks-core = { module = "com.google.mediapipe:tasks-core", version.ref = "tasksCore" }
+tasks-text = { module = "com.google.mediapipe:tasks-text", version.ref = "tasksText" }
+tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflowLite" }
+tensorflow-lite-support = { module = "org.tensorflow:tensorflow-lite-support", version.ref = "tensorflowLiteSupport" }
+tensorflow-lite-task-text = { module = "org.tensorflow:tensorflow-lite-task-text", version.ref = "tensorflowLiteTaskText" }
+genai-common = { group = "com.google.mlkit", name = "genai-common", version.ref = "genaiCommon" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

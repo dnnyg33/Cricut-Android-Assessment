@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.cricut.androidassessment.ai.AnswerEvaluator
 import com.cricut.androidassessment.model.MultipleAnswerMultipleChoiceQuestion
 import com.cricut.androidassessment.model.MultipleChoiceAnswer
 import com.cricut.androidassessment.model.OpenEndedQuestion
@@ -43,7 +44,8 @@ import com.cricut.androidassessment.ui.composables.OpenEndedQuestionComposable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AssessmentScreen(
-    viewModel: AssessmentViewModel = viewModel()
+    viewModel: AssessmentViewModel = viewModel(),
+    evaluator: AnswerEvaluator
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     viewModel.load()

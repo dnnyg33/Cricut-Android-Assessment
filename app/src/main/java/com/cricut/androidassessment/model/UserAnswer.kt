@@ -1,5 +1,7 @@
 package com.cricut.androidassessment.model
 
+import com.cricut.androidassessment.ai.EvalResult
+
 //renamed from Answer
 sealed interface UserAnswer {
     val questionId: String
@@ -25,5 +27,6 @@ data class MultipleChoiceAnswer(
 
 data class TextAnswer(
     override val questionId: String,
-    val text: String
+    val text: String,
+    val result: EvalResult, // Score from AI evaluation (0.0 to 1.0
 ) : UserAnswer
