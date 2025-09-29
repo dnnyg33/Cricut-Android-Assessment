@@ -64,11 +64,11 @@ data class OpenEndedQuestion(
 ) : Question {
     override fun selectOption(index: Int): UserAnswer {
         // No-op for text answer; selection by index not applicable
-        return this.userAnswer ?: TextAnswer(id, "", 0.0f)
+        throw UnsupportedOperationException("Text answer cannot be selected.")
     }
 
     override fun deselectOption(index: Int): UserAnswer {
         // No-op for text answer; deselection by index not applicable
-        return this.userAnswer ?: TextAnswer(id, "", 0.0f)
+        throw UnsupportedOperationException("Text answer cannot be deselected.")
     }
 }
